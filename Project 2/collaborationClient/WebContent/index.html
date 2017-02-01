@@ -1,0 +1,224 @@
+<!doctype html>
+<html ng-app="myApp">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-cookies.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-route.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.1/sockjs.js"></script>
+     <!-- CSS -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="assets/css/form-elements.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+        
+      <!-- footer -->
+		<link rel="stylesheet" href="assets/css/footer-distributed.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="assets/ico/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+        <style>
+/* .navbar {
+background-color: rgba(250,250,250, 0);
+color:#17202A;
+box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.3), inset 0px 2px 0px 0px rgba(250, 250, 250, 0.5);
+border: 1px solid rgba(0, 0, 0, 0);
+  } */
+ .navbar {
+      font-family: Montserrat, sans-serif;
+      margin-bottom: 0;
+      background-color: #2d2d30;
+      border: 0;
+      font-size: 11px !important;
+      letter-spacing: 4px;
+      opacity: 0.9;
+      
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      font-size: 12px;
+      letter-spacing: 5px;
+  }
+  .navbar li a, .navbar .navbar-brand { 
+      color: #d5d5d5 !important;
+  }
+  .navbar-nav li a:hover {
+      color: #fff !important;
+  }
+  .navbar-nav li.active a {
+      color: #fff !important;
+      background-color: #29292c !important;
+  }
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+  }
+  .open .dropdown-toggle {
+      color: #fff;
+      background-color: #555 !important;
+  }
+  .dropdown-menu li a {
+      color: #000 !important;
+  }
+  .dropdown-menu li a:hover {
+      background-color: red !important;
+  }
+  body {
+    background-color: #900C3F;
+    color:#FFFFFF;
+}
+.navbar-default:hover { background-color: #000000; color: #FFFFFF; }
+.navbar-nav > li > a {
+    color: #000000;
+}
+.navbar-default li:hover ul, .navbar-default li.over ul {display: block; }
+  </style>
+ </head>
+ 
+ <body>
+ 
+
+    
+     <nav class="navbar navbar-default navbar-fixed-top">
+     <div class="container-fluid">
+     <div class="navbar-header">
+     <a class="navbar-brand" href="#myPage">Chat Box</a>
+     </div>
+     
+     <ul class="nav navbar-nav navbar-right">
+     <li><a href="#/">Home</a></li>
+     <!-- <li><a href="#/job_opportunities">Jobs</a></li> -->
+         <li class="dropdown">
+         <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Blog <span class="caret"></span></a>
+         <ul class="dropdown-menu">
+          <li><a href="#/create_blog">Create Blog</a></li>
+          <li><a href="#/list_blog">List Blog</a></li>
+          <li><a href="#/view_blog">View Blog</a></li> 
+        </ul>
+        </li>
+        <li class="dropdown">
+         <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Friend <span class="caret"></span></a>
+         <ul class="dropdown-menu">
+          <li><a href="#/search_friend">Search Friend</a></li>
+          <li><a href="#/view_friend">View Friend</a></li>
+          <li><a href="#/add_friend">Add Friend</a></li> 
+        </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">User
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#/login">Login</a></li>
+            <li><a href="#/register">Register</a></li>
+            <li ng-hide="currentUser==''" ng-controller="UserController as ctrl"><button type="button" ng-click="ctrl.logout()" class="btn btn-xs"><span class="glyphicon glyphicon-log-out"></span> Logout</button></li>
+          </ul>
+        </li>        
+          <!-- <li ng-hide="currentUser==''"><a href="#/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li> -->
+          <li ng-show="currentUser==''"><a href="#/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+         
+        </ul>
+      </div>   
+     </div>
+     </nav>
+     <br>
+<br>
+<br>
+
+<<nav class="navbar navbar-default navbar-fixed" style="position: fixed; width: 1350px">
+ <div ng-controller="HomeController as ctrl">
+<div ng-hide="currentUser==undefined">
+
+		<div class="nav navbar-nav navbar-left">Welcome: {{currentUser.username}}</div>
+		
+		<div class="nav navbar-nav navbar-right">You logged in as: {{currentUser.role}}</div>
+		</div>
+		</div>
+		</nav>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		
+    <div class="container">
+     <div ng-view></div>
+     </div>
+     
+     
+     <footer class="footer-distributed">
+
+			<div class="footer-right">
+
+				<a href="#"><i class="fa fa-facebook"></i></a>
+				<a href="#"><i class="fa fa-twitter"></i></a>
+				<a href="#"><i class="fa fa-linkedin"></i></a>
+				<a href="#"><i class="fa fa-github"></i></a>
+
+			</div>
+
+			<div class="footer-left">
+
+				<p class="footer-links">
+					<a href="#">Home</a>
+					·
+					<a href="#">Blog</a>
+					·
+					<a href="#">Pricing</a>
+					·
+					<a href="#">About</a>
+					·
+					<a href="#">Faq</a>
+					·
+					<a href="#">Contact</a>
+				</p>
+
+				<p>Chat Box &copy; 2016</p>
+			</div>
+
+		</footer>
+     
+     
+     <script src="app.js"></script>
+          
+               <script src="c_user/UserController.js"></script>
+               <script src="c_user/UserService.js"></script>
+               <script src="c_friend/FriendController.js"></script>
+               <script src="c_friend/FriendService.js"></script>
+               <script src="c_home/HomeController.js"></script>
+               <script src="c_blog/BlogController.js"></script>
+               <script src="c_blog/BlogService.js"></script>
+              <!--  <script src="c_forum/ForumController.js"></script>
+               <script src="c_forum/ForumService.js"></script> -->
+               <script src="c_chat/ChatController.js"></script>
+               <script src="c_chat/ChatService.js"></script>
+               
+               <script>
+function validateForm() {
+    var x = document.forms["myForm"]["email"].value;
+    var atpos = x.indexOf("@");
+    var dotpos = x.lastIndexOf(".");
+    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+        alert("Not a valid e-mail address");
+        return false;
+    }
+}
+</script>
+          
+     
+</body>
+</html>
